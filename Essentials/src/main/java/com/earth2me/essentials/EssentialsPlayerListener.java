@@ -888,7 +888,8 @@ public class EssentialsPlayerListener implements Listener, FakeAccessor {
             if (ess.getSettings().isDirectHatAllowed() && event.getClick() == ClickType.LEFT && event.getSlot() == 39
                 && event.getCursor().getType() != Material.AIR && event.getCursor().getType().getMaxDurability() == 0
                 && !MaterialUtil.isSkull(event.getCursor().getType())
-                && user.isAuthorized("essentials.hat") && !user.isAuthorized("essentials.hat.prevent-type." + event.getCursor().getType().name().toLowerCase())
+                && user.isAuthorized("essentials.hat") && !(user.isAuthorized("essentials.hat.prevent-type." + event.getCursor().getType().name().toLowerCase())
+                && (!user.isAuthorized("essentials.hat.allow-type." + event.getCursor().getType().name().toLowerCase())) && !user.isAuthorized("essentials.hat.allow-type.*"))
                 && !isPreventBindingHat(user, (PlayerInventory) clickedInventory)) {
                 event.setCancelled(true);
                 final PlayerInventory inv = (PlayerInventory) clickedInventory;
