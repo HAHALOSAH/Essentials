@@ -35,17 +35,26 @@ public final class PermissionsDefaults {
     public static void registerAllHatDefaults() {
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
-        final Permission hatPerm = pluginManager.getPermission(Commandhat.PERM_PREFIX + "*");
-        if (hatPerm != null) {
-            return;
+        final Permission hatPreventPerm = pluginManager.getPermission(Commandhat.PREVENT_PERM_PREFIX + "*");
+        if (hatPreventPerm == null) {
+            final ImmutableMap.Builder<String, Boolean> preventChildren = ImmutableMap.builder();
+            for (final Material mat : Material.values()) {
+                final String matPreventPerm = Commandhat.PREVENT_PERM_PREFIX + mat.name().toLowerCase();
+                preventChildren.put(matPreventPerm, true);
+                pluginManager.addPermission(new Permission(matPreventPerm, "Prevent using " + mat + " as a type of hat.", PermissionDefault.FALSE));
+            }
+            pluginManager.addPermission(new Permission(Commandhat.PREVENT_PERM_PREFIX + "*", "Prevent all types of hats", PermissionDefault.FALSE, preventChildren.build()));
         }
-
-        final ImmutableMap.Builder<String, Boolean> children = ImmutableMap.builder();
-        for (final Material mat : Material.values()) {
-            final String matPerm = Commandhat.PERM_PREFIX + mat.name().toLowerCase();
-            children.put(matPerm, true);
-            pluginManager.addPermission(new Permission(matPerm, "Prevent using " + mat + " as a type of hat.", PermissionDefault.FALSE));
+        
+        final Permission hatAllowPerm = pluginManager.getPermission(Commandhat.ALLOW_PERM_PREFIX + "*");
+        if (hatAllowPerm == null) {
+            final ImmutableMap.Builder<String, Boolean> allowChildren = ImmutableMap.builder();
+            for (final Material mat : Material.values()) {
+                final String matAllowPerm = Commandhat.ALLOW_PERM_PREFIX + mat.name().toLowerCase();
+                allowChildren.put(matAllowPerm, true);
+                pluginManager.addPermission(new Permission(matAllowPerm, "Allow using " + mat + " as a type of hat.", PermissionDefault.FALSE));
+            }
+            pluginManager.addPermission(new Permission(Commandhat.ALLOW_PERM_PREFIX + "*", "Allow all types of hats", PermissionDefault.FALSE, allowChildren.build()));
         }
-        pluginManager.addPermission(new Permission(Commandhat.PERM_PREFIX + "*", "Prevent all types of hats", PermissionDefault.FALSE, children.build()));
     }
 }
