@@ -19,7 +19,8 @@ import static com.earth2me.essentials.I18n.tl;
 public class Commandhat extends EssentialsCommand {
 
     // The prefix for hat prevention commands
-    public static final String PERM_PREFIX = "essentials.hat.prevent-type.";
+    public static final String PREVENT_PERM_PREFIX = "essentials.hat.prevent-type.";
+    public static final String ALLOW_PERM_PREFIX = "essentials.hat.allow-type.";
 
     public Commandhat() {
         super("hat");
@@ -34,9 +35,12 @@ public class Commandhat extends EssentialsCommand {
                 return;
             }
 
-            final TriState wildcard = user.isAuthorizedExact(PERM_PREFIX + "*");
-            final TriState material = user.isAuthorizedExact(PERM_PREFIX + hand.getType().name().toLowerCase());
-            if ((wildcard == TriState.TRUE && material != TriState.FALSE) || ((wildcard != TriState.TRUE) && material == TriState.TRUE)) {
+            final TriState wildcard = user.isAuthorizedExact(PREVENT_PERM_PREFIX + "*");
+            final TriState material = user.isAuthorizedExact(PREVENT_PERM_PREFIX + hand.getType().name().toLowerCase());
+            final TriState wildcardAllowed = user.isAuthorizedExact(ALLOW_PERM_PREFIX + "*");
+            final TriState allowed = user.isAuthorizedExact(ALLOW_PERM_PREFIX + hand.getType().name().toLowerCase());
+            if (((wildcard == TriState.TRUE && material != TriState.FALSE) || ((wildcard != TriState.TRUE) && material == TriState.TRUE))
+                && (allowed != TriState.TRUE && wildcardAllowed != TriState.TRUE)) {
                 user.sendMessage(tl("hatFail"));
                 return;
             }
